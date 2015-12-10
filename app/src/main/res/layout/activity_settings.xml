@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_account"
+        android:id="@+id/settings_account"
+
+        android:padding="30dp"
+        android:background="#ffffff"
+        android:textSize="25sp"
+        android:drawableLeft="@drawable/ic_account_circle_black_48dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TableRow
+        android:id="@+id/hr"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_help"
+        android:id="@+id/settings_help"
+
+        android:padding="30dp"
+        android:background="#ffffff"
+        android:textSize="25sp"
+        android:drawableLeft="@drawable/ic_help_black_48dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TableRow
+        android:id="@+id/hr3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_about"
+        android:id="@+id/settings_about"
+
+        android:padding="30dp"
+        android:background="#ffffff"
+        android:textSize="25sp"
+        android:drawableLeft="@drawable/ic_android_black_48dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TableRow
+        android:id="@+id/hr4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444"/>
+</LinearLayout>
