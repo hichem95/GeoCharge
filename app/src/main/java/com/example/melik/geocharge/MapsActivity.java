@@ -1,30 +1,22 @@
 package com.example.melik.geocharge;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -108,38 +100,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             ac= (CheckBox) alertDialogView.findViewById(R.id.type_AC_add);
             LatLng pos = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
             detailsText = editText.getText().toString();
-
+            String type="";
 
             if(detailsText.trim().equals("") || (!usb.isChecked()&& !ac.isChecked()))
                 Toast.makeText(getApplicationContext(), "Vous devez entrer toutes les informations", Toast.LENGTH_SHORT).show();
             else {
 
-                mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                    @Override
-                    public View getInfoContents(Marker marker) {
-                        View v = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-                        TextView type = (TextView) v.findViewById(R.id.type_infoWindow);
-                        TextView details = (TextView) v.findViewById(R.id.details_infoWindow);
                         if (usb.isChecked() && ac.isChecked())
-                            type.setText("USB/AC");
+                            type="USB/AC";
                         else if (usb.isChecked())
-                            type.setText("USB ");
+                            type="USB";
                         else if (ac.isChecked())
-                            type.setText("AC");
+                            type="AC";
+                new Borne(mMap,type,detailsText,pos);
 
-                        details.setText(detailsText);
-                        return v;
                     }
-
-                    @Override
-                    public View getInfoWindow(Marker marker) {
-                        return null;
-                    }
-                });
-                mMap.addMarker(new MarkerOptions().position(pos));
-
-
-                }
             }
         }
     }
