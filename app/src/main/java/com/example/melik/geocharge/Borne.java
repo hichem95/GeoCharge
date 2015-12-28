@@ -1,8 +1,5 @@
 package com.example.melik.geocharge;
 
-import android.view.View;
-import android.widget.TextView;
-
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -11,29 +8,85 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Created by Melik on 25/12/2015.
  */
-public class Borne implements GoogleMap.InfoWindowAdapter {
-        private String type,details;
-        private LatLng position;
+public class Borne  {
+        private String type,details,nom;
+        private double longitude,latitude;
         private Marker uneBorne;
 
-        public Borne(GoogleMap uneMap, String unType, String desDetails, LatLng unePosition){
+
+        public Borne( String unType, String desDetails, LatLng unePosition){
             this.type=unType;
             this.details=desDetails;
-            this.position=unePosition;
-            this.uneBorne=uneMap.addMarker(new MarkerOptions().title(type).snippet(details).position(position));
+            this.latitude=unePosition.latitude;
+            this.longitude=unePosition.longitude;
 
         }
+        public Borne(){}
+
+        public Borne(String unType, String desDetails, double longitude, double latitude){
+            this.type=unType;
+            this.details=desDetails;
+            this.latitude=latitude;
+            this.longitude=longitude;
+        }
+
+        public Marker ajouterBorneMap(GoogleMap uneMap){
+            this.uneBorne=uneMap.addMarker(new MarkerOptions().title(type).snippet(details).position(new LatLng(latitude,longitude)));
+            return this.uneBorne;
+        }
+        public void ajouterBorneBDD(Database db){
+            db.ajouterBorne(this);
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getDetails() {
+            return details;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public String getNom(){
+            return nom;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public void setDetails(String details) {
+            this.details = details;
+        }
+
+        public void setNom(String nom) {
+            this.nom = nom;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
+        }
+
 
     @Override
-    public View getInfoWindow(Marker marker) {
-        View v = View.inflate()
-        TextView type = (TextView) v.findViewById(R.id.type_infoWindow);
-        TextView details = (TextView) v.findViewById(R.id.details_infoWindow);
-        return v;
-    }
-
-    @Override
-    public View getInfoContents(Marker marker) {
-        return null;
+    public String toString() {
+        return "Borne{" +
+                "type='" + type + '\'' +
+                ", details='" + details + '\'' +
+                ", nom='" + nom + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
     }
 }

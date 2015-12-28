@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,10 +19,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private View alertDialogView;
+    private Database db;
 
     String detailsText;
     CheckBox usb,ac;
@@ -35,6 +40,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        this.db=new Database(this);
+
 
     }
 
@@ -42,6 +49,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);  // active bouton localisation
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15));
+        this.init_bornes();
+
     }
 
 
@@ -112,10 +122,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             type="USB";
                         else if (ac.isChecked())
                             type="AC";
-                new Borne(mMap,type,detailsText,pos);
+                Borne b=new Borne(type,detailsText,pos);
+                b.ajouterBorneMap(mMap);
+                b.ajouterBorneBDD(db);
 
                     }
             }
+    }
+
+    public void init_bornes(){
+        ArrayList<Borne> arr=db.getAllBorne();
+        ListIterator<Borne> l=arr.listIterator();
+        while(l.hasNext()){
+            Borne b = l.next();
+            b.ajouterBorneMap(mMap);
+            Log.i("donnee",b.toString());
         }
     }
+}
 
