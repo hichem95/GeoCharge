@@ -42,13 +42,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         this.db=new Database(this);
 
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);  // active bouton localisation
+
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15));
         this.init_bornes();
 
@@ -108,7 +108,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             EditText editText = (EditText) alertDialogView.findViewById(R.id.details_add);
             usb= (CheckBox) alertDialogView.findViewById(R.id.type_USB_add);
             ac= (CheckBox) alertDialogView.findViewById(R.id.type_AC_add);
-            LatLng pos = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
             detailsText = editText.getText().toString();
             String type="";
 
@@ -122,7 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             type="USB";
                         else if (ac.isChecked())
                             type="AC";
-                Borne b=new Borne(type,detailsText,pos);
+                Borne b=new Borne(type,detailsText,mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
                 b.ajouterBorneMap(mMap);
                 b.ajouterBorneBDD(db);
 

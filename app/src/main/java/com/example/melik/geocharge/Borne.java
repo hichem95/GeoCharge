@@ -14,14 +14,6 @@ public class Borne  {
         private Marker uneBorne;
 
 
-        public Borne( String unType, String desDetails, LatLng unePosition){
-            this.type=unType;
-            this.details=desDetails;
-            this.latitude=unePosition.latitude;
-            this.longitude=unePosition.longitude;
-
-        }
-        public Borne(){}
 
         public Borne(String unType, String desDetails, double longitude, double latitude){
             this.type=unType;
@@ -31,7 +23,7 @@ public class Borne  {
         }
 
         public Marker ajouterBorneMap(GoogleMap uneMap){
-            this.uneBorne=uneMap.addMarker(new MarkerOptions().title(type).snippet(details).position(new LatLng(latitude,longitude)));
+            this.uneBorne=uneMap.addMarker(new MarkerOptions().title(type).snippet(details).position(new LatLng(this.latitude,this.longitude)));
             return this.uneBorne;
         }
         public void ajouterBorneBDD(Database db){
