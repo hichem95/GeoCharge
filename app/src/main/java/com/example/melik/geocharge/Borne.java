@@ -15,7 +15,7 @@ public class Borne  {
 
 
 
-        public Borne(String unType, String desDetails, double longitude, double latitude){
+        public Borne(String unType, String desDetails, double latitude,double longitude){
             this.type=unType;
             this.details=desDetails;
             this.latitude=latitude;

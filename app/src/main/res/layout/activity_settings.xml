@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <Button
         android:layout_width="match_parent"
@@ -56,4 +62,24 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#444"/>
+
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Notifications"
+        android:id="@+id/settings_notifications"
+        android:padding="30dp"
+        android:background="#ffffff"
+        android:textSize="25sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+         />
+
+    <TableRow
+        android:id="@+id/hr5"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444"/>
+
+
 </LinearLayout>
+    </ScrollView>
