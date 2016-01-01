@@ -42,17 +42,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         this.db=new Database(this);
-
-
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);  // active bouton localisation
         this.init_bornes();
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMap.getMyLocation().getLatitude(), mMap.getMyLocation().getLongitude()), 15));
-
     }
 
 
@@ -125,6 +122,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Borne b=new Borne(type,detailsText,mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
                 b.ajouterBorneMap(mMap);
                 b.ajouterBorneBDD(db);
+                b.getUneBorne().showInfoWindow();
 
                     }
             }
@@ -138,5 +136,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             b.ajouterBorneMap(mMap);
         }
     }
+
 }
 

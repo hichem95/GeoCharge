@@ -69,6 +69,12 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void supprimerBorne(Borne borne){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_NAME, MARKER_LAT +" = ? AND "+MARKER_LONG+" = ?",new String[]{String.valueOf(borne.getLatitude()),String.valueOf(borne.getLongitude())});
+    }
+
     public ArrayList<Borne> getAllBorne(){ //methodes pour récup toute les bornnes de la BDD et les retourne sous forme d'arraylist
         ArrayList<Borne> bornesliste=new ArrayList<>();
         String select ="SELECT * FROM "+TABLE_NAME;

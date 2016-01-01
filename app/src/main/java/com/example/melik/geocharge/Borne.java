@@ -30,6 +30,11 @@ public class Borne  {
             db.ajouterBorne(this);
         }
 
+        public void supprimerBorne(Database db){
+            this.uneBorne.remove();
+            db.supprimerBorne(this);
+        }
+
         public String getType() {
             return type;
         }
@@ -49,6 +54,8 @@ public class Borne  {
         public String getNom(){
             return nom;
         }
+
+        public Marker getUneBorne() { return uneBorne;    }
 
         public void setType(String type) {
             this.type = type;

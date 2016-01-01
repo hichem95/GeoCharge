@@ -29,7 +29,7 @@
     <string name="directions_infoWindow">itinéraire</string>
     <string name="type_infoWindow"></string>
     <string name="details_infoWindow"></string>
-
+    <string name="settings_notif">Notifications</string>
 
 
 </resources>
