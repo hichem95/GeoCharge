@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -61,6 +63,15 @@ public class SettingsActivity extends AppCompatActivity  {
         });
         this.registerReceiver(this.batteryChangeReceiver,
                 new IntentFilter(Intent.ACTION_BATTERY_LOW));
+
+        Button a_propos=(Button) findViewById(R.id.settings_about);
+        a_propos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent about=new Intent(SettingsActivity.this,A_propos.class);
+                startActivity(about);
+            }
+        });
     }
 
     @Override
