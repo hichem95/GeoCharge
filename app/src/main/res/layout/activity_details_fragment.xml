@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="#FFFFFF">
+
+    <ImageButton
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/close_details"
+        android:src="@drawable/ic_expand_more_black_48dp"
+        android:title="@string/directions_infoWindow"
+        style="?android:attr/borderlessButtonStyle"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center" />
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/type_add"
+            android:textStyle="bold"
+            android:id="@+id/type_title_add"
+            android:textColor="#000"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:id="@+id/type_infoWindow"
+            android:text="@string/type_infoWindow"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/details_title_add"
+            android:textStyle="bold"
+            android:id="@+id/details_title_add"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/details_infoWindow"
+            android:text="@string/details_infoWindow" />
+    </LinearLayout>
+
+    <TableRow
+        android:id="@+id/hr45"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="#444"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/favorite_infoWindow"
+            android:contentDescription="Bouton favoris"
+            android:src="@drawable/ic_grade_black_48dp"
+            android:title="@string/favorite_infoWindow"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_infowindow"
+            android:contentDescription="Bouton supprimer"
+            android:src="@drawable/ic_delete_black_48dp"
+            android:title="@string/report_infoWindow"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:adjustViewBounds="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/itineraire_infoWindow"
+            android:contentDescription="Bouton itinéraire"
+            android:src="@drawable/ic_directions_black_48dp"
+            android:title="@string/directions_infoWindow"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:adjustViewBounds="true" />
+
+        <ImageButton
+            android:contentDescription="Bouton probleme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/report_infowindow"
+            android:src="@drawable/ic_report_problem_black_48dp"
+            android:title="@string/report_infoWindow"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:adjustViewBounds="true" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

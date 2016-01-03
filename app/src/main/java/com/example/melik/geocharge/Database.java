@@ -20,8 +20,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String MARKER_LONG="long";
     public static final String MARKER_NAME="nom";
 
-    //marker table name
-    public static final String TABLE_NAME="Markers";
+    // table name
+    public static final String TABLE_MARKKER_NAME="Markers";
+    public static final String TABLE_FAVORIS_NAME="Favoris";
 
     //db name
     public static final String DATABASE_NAME= "Geocharge.db";
@@ -31,13 +32,23 @@ public class Database extends SQLiteOpenHelper {
 
     //operations
     public static final String MARKER_TABLE_CREATE=
-            "CREATE TABLE "+TABLE_NAME+" (" +
+            "CREATE TABLE "+TABLE_MARKKER_NAME+" (" +
+            MARKER_TYPE + " TEXT, " +
+            MARKER_DETAILS + " TEXT, " +
+            MARKER_LAT + " REAL," +
+            MARKER_LONG + " REAL);";
+
+    public static final String FAVORIS_TABLE_CREATE=
+            "CREATE TABLE "+TABLE_FAVORIS_NAME+" (" +
             MARKER_TYPE + " TEXT, " +
             MARKER_DETAILS + " TEXT, " +
             MARKER_LAT + " REAL," +
             MARKER_LONG + " REAL," +
             MARKER_NAME + " TEXT);";
-    public static final String MARKKER_TABLE_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
+
+
+    public static final String MARKKER_TABLE_DROP = "DROP TABLE IF EXISTS " + TABLE_MARKKER_NAME + ";";
+    public static final String FAVORIS_TABLE_DROP = "DROP TABLE IF EXISTS " + TABLE_FAVORIS_NAME + ";";
 
 
     public Database(Context context) {
@@ -45,13 +56,15 @@ public class Database extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db) {// on crée la table
         db.execSQL(MARKER_TABLE_CREATE);
-    } // on crée la table
+        db.execSQL(FAVORIS_TABLE_CREATE);
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { // quand on actualise la base ça la suprimme et récrée
         db.execSQL(MARKKER_TABLE_DROP);
+        db.execSQL(FAVORIS_TABLE_DROP);
         onCreate(db);
     }
 
@@ -63,21 +76,57 @@ public class Database extends SQLiteOpenHelper {
         value.put(MARKER_DETAILS, borne.getDetails());
         value.put(MARKER_LAT, borne.getLatitude());
         value.put(MARKER_LONG, borne.getLongitude());
-        value.put(MARKER_NAME, borne.getNom());
 
-        db.insert(TABLE_NAME, null, value);
+        db.insert(TABLE_MARKKER_NAME, null, value);
+        db.close();
+    }
+
+    public void ajouterBorneFavoris(Borne borne){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues value = new ContentValues();
+        value.put(MARKER_TYPE, borne.getType());
+        value.put(MARKER_DETAILS, borne.getDetails());
+        value.put(MARKER_LAT, borne.getLatitude());
+        value.put(MARKER_LONG, borne.getLongitude());
+        value.put(MARKER_NAME,borne.getNom());
+
+        db.insert(TABLE_FAVORIS_NAME, null, value);
         db.close();
     }
 
     public void supprimerBorne(Borne borne){
         SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MARKKER_NAME, MARKER_LAT + " = ? AND " + MARKER_LONG + " = ?", new String[]{String.valueOf(borne.getLatitude()), String.valueOf(borne.getLongitude())});
+    }
 
-        db.delete(TABLE_NAME, MARKER_LAT +" = ? AND "+MARKER_LONG+" = ?",new String[]{String.valueOf(borne.getLatitude()),String.valueOf(borne.getLongitude())});
+    public void supprimerBorneFavoris(Borne borne){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FAVORIS_NAME, MARKER_LAT + " = ? AND " + MARKER_LONG + " = ?", new String[]{String.valueOf(borne.getLatitude()), String.valueOf(borne.getLongitude())});
     }
 
     public ArrayList<Borne> getAllBorne(){ //methodes pour récup toute les bornnes de la BDD et les retourne sous forme d'arraylist
         ArrayList<Borne> bornesliste=new ArrayList<>();
-        String select ="SELECT * FROM "+TABLE_NAME;
+        String select ="SELECT * FROM "+TABLE_MARKKER_NAME;
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(select, null);
+        if(cursor.moveToFirst()){
+            do {
+                String type=cursor.getString(0);
+                String details=cursor.getString(1);
+                double latitude=cursor.getDouble(2);
+                double longitude=cursor.getDouble(3);
+                Borne borne=new Borne(type,details,latitude,longitude);
+                bornesliste.add(borne);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return bornesliste;
+    }
+
+    public ArrayList<Borne> recupereBorneFavoris(){
+        ArrayList<Borne> bornesliste=new ArrayList<>();
+        String select ="SELECT * FROM "+TABLE_FAVORIS_NAME;
         SQLiteDatabase db=this.getWritableDatabase();
         Cursor cursor = db.rawQuery(select,null);
         if(cursor.moveToFirst()){
@@ -86,7 +135,9 @@ public class Database extends SQLiteOpenHelper {
                 String details=cursor.getString(1);
                 double latitude=cursor.getDouble(2);
                 double longitude=cursor.getDouble(3);
+                String nom=cursor.getString(4);
                 Borne borne=new Borne(type,details,latitude,longitude);
+                borne.setNom(nom);
                 bornesliste.add(borne);
             }while (cursor.moveToNext());
         }

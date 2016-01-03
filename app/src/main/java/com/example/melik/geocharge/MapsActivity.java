@@ -1,6 +1,7 @@
 package com.example.melik.geocharge;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -19,7 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -44,6 +46,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        FragmentTransaction f = getFragmentManager().beginTransaction();
+        f.hide(getFragmentManager().findFragmentById(R.id.details_frag));
+        f.commit();
+
         this.db=new Database(this);
     }
 
@@ -55,8 +61,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),15));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
                 mMap.setOnMyLocationChangeListener(null);
+            }
+        });
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                FragmentTransaction f = getFragmentManager().beginTransaction();
+                DetailsFragment df = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_frag);
+                TextView type = (TextView) df.getView().findViewById(R.id.type_infoWindow);
+                TextView details = (TextView) df.getView().findViewById(R.id.details_infoWindow);
+                type.setText(marker.getTitle());
+                details.setText(marker.getSnippet());
+                f.show(getFragmentManager().findFragmentById(R.id.details_frag));
+                f.commit();
+                return false;
             }
         });
         this.init_bornes();
@@ -132,7 +153,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Borne b=new Borne(type,detailsText,mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
                 b.ajouterBorneMap(mMap);
                 b.ajouterBorneBDD(db);
-                b.getUneBorne().showInfoWindow();
 
                     }
             }

@@ -12,6 +12,7 @@ public class Borne  {
         private String type,details,nom;
         private double longitude,latitude;
         private Marker uneBorne;
+        private boolean selected;
 
 
 
@@ -33,6 +34,15 @@ public class Borne  {
         public void supprimerBorne(Database db){
             this.uneBorne.remove();
             db.supprimerBorne(this);
+        }
+
+        public void ajouterBorneFavoris(String nom,Database db){
+            this.setNom(nom);
+            db.ajouterBorneFavoris(this);
+        }
+
+        public void supprimerBorneFavoris(Database db){
+            db.supprimerBorneFavoris(this);
         }
 
         public String getType() {
@@ -57,25 +67,19 @@ public class Borne  {
 
         public Marker getUneBorne() { return uneBorne;    }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public void setDetails(String details) {
-            this.details = details;
-        }
-
         public void setNom(String nom) {
             this.nom = nom;
         }
 
-        public void setLongitude(double longitude) {
-            this.longitude = longitude;
+        public boolean isSelected() {
+            return selected;
         }
 
-        public void setLatitude(double latitude) {
-            this.latitude = latitude;
+        public void setSelected(boolean selected) {
+            this.selected = selected;
         }
+
+
 
 
     @Override
