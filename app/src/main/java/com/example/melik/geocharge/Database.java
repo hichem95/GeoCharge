@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.ArrayList;
 
 /**
@@ -104,6 +106,22 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_FAVORIS_NAME, MARKER_LAT + " = ? AND " + MARKER_LONG + " = ?", new String[]{String.valueOf(borne.getLatitude()), String.valueOf(borne.getLongitude())});
     }
+
+    public Borne getUneBorne(double latitude, double longitude){
+        SQLiteDatabase db= this.getWritableDatabase();
+        Cursor cursor= db.rawQuery("SELECT * FROM " + TABLE_MARKKER_NAME + " WHERE " + MARKER_LAT + " = ? AND " + MARKER_LONG + " = ?", new String[]{String.valueOf(latitude), String.valueOf(longitude)});
+       // cursor.moveToFirst();
+        if(cursor.moveToFirst()) {
+            String type = cursor.getString(0);
+            String details = cursor.getString(1);
+            double lt = cursor.getDouble(2);
+            double lg = cursor.getDouble(3);
+            Borne borne = new Borne(type, details, lt, lg);
+            return borne;
+        }
+        else return null;
+    }
+
 
     public ArrayList<Borne> getAllBorne(){ //methodes pour récup toute les bornnes de la BDD et les retourne sous forme d'arraylist
         ArrayList<Borne> bornesliste=new ArrayList<>();

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -35,6 +37,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     String detailsText;
     CheckBox usb,ac;
+
+    private double lat,lon;
+    private int request;
 
 
     // ---------FNCT DE BASE -------------
@@ -51,6 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         f.commit();
 
         this.db=new Database(this);
+
     }
 
 
@@ -58,6 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);  // active bouton localisation
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(Location location) {
@@ -68,18 +75,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
+                marker.hideInfoWindow();
                 FragmentTransaction f = getFragmentManager().beginTransaction();
+                Borne b= db.getUneBorne(marker.getPosition().latitude, marker.getPosition().longitude);
+                b.setUneBorne(marker);
                 DetailsFragment df = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_frag);
+                df.setUneBorne(b);
+                df.setUnDb(db);
                 TextView type = (TextView) df.getView().findViewById(R.id.type_infoWindow);
                 TextView details = (TextView) df.getView().findViewById(R.id.details_infoWindow);
-                type.setText(marker.getTitle());
-                details.setText(marker.getSnippet());
+                type.setText(b.getType());
+                details.setText(b.getDetails());
                 f.show(getFragmentManager().findFragmentById(R.id.details_frag));
                 f.commit();
                 return false;
             }
         });
+
         this.init_bornes();
     }
 
@@ -110,7 +122,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.action_favorite:
                 // Comportement du bouton "Favoris"
                 Intent fav = new Intent(MapsActivity.this, FavoriteActivity.class);
-                startActivity(fav);
+                startActivityForResult(fav,request);
                 return true;
             case R.id.action_settings:
                 // Comportement du bouton "Réglages"
@@ -159,12 +171,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void init_bornes(){
+        new Borne("USB","Prise USB de station de Bus RATP se a ce niveau",48.898133, 2.359524).ajouterBorneBDD(db);
+        new Borne("USB","Prise USB de station de Bus RATP se a ce niveau",48.890633, 2.360009).ajouterBorneBDD(db);
+        new Borne("USB","Prise USB de station de Bus RATP se a ce niveau",48.845667, 2.371480).ajouterBorneBDD(db);
+        new Borne("USB","Prise USB de station de Bus RATP se a ce niveau",48.851715, 2.376469).ajouterBorneBDD(db);
+        new Borne("USB","Prise USB de station de Bus RATP se a ce niveau",48.856457, 2.382556).ajouterBorneBDD(db);
+
+        new Borne("AC","Prises de courant au niveau des aires de pauses a l'interieur du centre commercial Beaugrenelle ",48.848395, 2.282616).ajouterBorneBDD(db);
+        new Borne("AC","Prises de courant au niveau des aires de pauses a l'interieur du centre commercial des Halles",48.862387, 2.346535).ajouterBorneBDD(db);
+        new Borne("AC","Prises de courant au niveau des aires de pauses a l'interieur de la gare du Nord mais il faut pédaler pour créer du courant !",48.880076, 2.356241).ajouterBorneBDD(db);
+        new Borne("AC","Prises de courant au niveau des aires de pauses a l'interieur de la gare de Lyon",48.844807, 2.373887).ajouterBorneBDD(db);
+
+
         ArrayList<Borne> arr=db.getAllBorne();
         ListIterator<Borne> l=arr.listIterator();
         while(l.hasNext()){
             Borne b = l.next();
+            Log.i("Test",b.toString());
             b.ajouterBorneMap(mMap);
         }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == request){
+            if(resultCode == RESULT_OK){
+                lat = data.getDoubleExtra("Lat",0);
+                lon = data.getDoubleExtra("Lon",0);
+
+                if(lat != 0 && lon != 0){
+                    goBornes();
+                }
+            }
+        }
+    }
+
+    public void goBornes(){
+        LatLng pos = new LatLng(lat,lon);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos,15));
     }
 
 

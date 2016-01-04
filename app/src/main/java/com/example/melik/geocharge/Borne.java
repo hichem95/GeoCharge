@@ -1,9 +1,14 @@
 package com.example.melik.geocharge;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Created by Melik on 25/12/2015.
@@ -21,10 +26,11 @@ public class Borne  {
             this.details=desDetails;
             this.latitude=latitude;
             this.longitude=longitude;
+            this.selected=false;
         }
 
         public Marker ajouterBorneMap(GoogleMap uneMap){
-            this.uneBorne=uneMap.addMarker(new MarkerOptions().title(type).snippet(details).position(new LatLng(this.latitude,this.longitude)));
+            this.uneBorne=uneMap.addMarker(new MarkerOptions().position(new LatLng(this.latitude,this.longitude)));
             return this.uneBorne;
         }
         public void ajouterBorneBDD(Database db){
@@ -34,6 +40,14 @@ public class Borne  {
         public void supprimerBorne(Database db){
             this.uneBorne.remove();
             db.supprimerBorne(this);
+            ArrayList<Borne> arrayBorne=db.recupereBorneFavoris();
+            ListIterator<Borne> l=arrayBorne.listIterator();
+            while(l.hasNext()){
+                Borne b=l.next();
+                if(this.latitude==b.latitude && this.longitude==b.longitude){
+                    this.supprimerBorneFavoris(db);
+                }
+            }
         }
 
         public void ajouterBorneFavoris(String nom,Database db){
@@ -80,7 +94,9 @@ public class Borne  {
         }
 
 
-
+    public void setUneBorne(Marker uneBorne) {
+        this.uneBorne = uneBorne;
+    }
 
     @Override
     public String toString() {
@@ -88,8 +104,8 @@ public class Borne  {
                 "type='" + type + '\'' +
                 ", details='" + details + '\'' +
                 ", nom='" + nom + '\'' +
-                ", longitude=" + longitude +
                 ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }

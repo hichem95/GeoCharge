@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,28 +27,29 @@ public class FavoriteActivity extends AppCompatActivity {
     private ListView liste;
     public static double lat;
     public static double lon;
+    private Database db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
+        db=new Database(this);
         displayListView();
+
     }
 
 
-
-    public void ajoutListe(){
-        adaptListe.notifyDataSetChanged();
-    }
 
     public void supprimer(int id){
+        listPoint.get(id).supprimerBorneFavoris(db);
         listPoint.remove(id);
     }
 
     private void displayListView() {
 
         //Array list of countries
-        listPoint = new ArrayList<Borne>();
+        listPoint = db.recupereBorneFavoris();
         //create an ArrayAdaptar from the String Array
         adaptListe = new MyCustomAdapter(this, R.layout.fav_content, listPoint);
         liste = (ListView) findViewById(R.id.listFavoris);
@@ -60,7 +65,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 Intent i = new Intent(FavoriteActivity.this, MapsActivity.class);
                 i.putExtra("Lat", fav.getLatitude());
                 i.putExtra("Lon", fav.getLongitude());
-                setResult(RESULT_OK,i);
+                setResult(RESULT_OK, i);
                 finish();
                 /*Toast.makeText(getApplicationContext(),
                         "Clique sur  " + fav.getNom(),
@@ -68,6 +73,44 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_favoris_option, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_delete:
+                StringBuffer responseText = new StringBuffer();
+                if(!noItemSelected()){
+                    responseText.append("Suppression...");
+
+                    for(int i=0;i<listPoint.size();i++){
+                        Borne cp = (Borne) listPoint.get(i);
+                    /*if(cp.isSelected()){
+                        responseText.append("\n" + cp.getNom());
+                    }*/
+                        if(cp.isSelected()){
+                            supprimer(i);
+                            i--;
+                        }
+                    }
+
+                    Toast.makeText(getApplicationContext(),
+                            responseText, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    responseText.append("Selectionnez des favoris");
+                    Toast.makeText(getApplicationContext(),
+                            responseText, Toast.LENGTH_SHORT).show();
+                }
+                adaptListe.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class MyCustomAdapter extends ArrayAdapter<Borne> {

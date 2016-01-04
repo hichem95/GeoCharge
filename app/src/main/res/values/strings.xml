@@ -30,6 +30,7 @@
     <string name="type_infoWindow"></string>
     <string name="details_infoWindow"></string>
     <string name="settings_notif">Notifications</string>
+    <string name="text_favorite">Nom</string>
 
 
 </resources>
