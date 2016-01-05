@@ -23,7 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -59,6 +58,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -82,6 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 DetailsFragment df = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_frag);
                 df.setUneBorne(b);
                 df.setUnDb(db);
+                df.setUneMap(mMap);
                 TextView type = (TextView) df.getView().findViewById(R.id.type_infoWindow);
                 TextView details = (TextView) df.getView().findViewById(R.id.details_infoWindow);
                 type.setText(b.getType());

@@ -3,21 +3,23 @@ package com.example.melik.geocharge;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
 
 public class DetailsFragment extends Fragment{
 
     private Borne uneBorne;
     private Database uneDb;
+    private GoogleMap uneMap;
     private View favorisDialogView;
 
     public DetailsFragment(){
@@ -47,12 +49,13 @@ public class DetailsFragment extends Fragment{
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 favorisDialogView = inflater.inflate(R.layout.dialog_favorite, null);
                 dialog.setView(favorisDialogView);
-                dialog.setTitle("Ajoutez au favoris");
+                dialog.setTitle("Ajoutez aux favoris");
                 dialog.setCancelable(false);
                 dialog.setPositiveButton("Ajouter", new OkOnClickListener());
                 dialog.setNegativeButton("Annuler", new CancelOnClickListener());
                 dialog.create();
                 dialog.show();
+                getFragmentManager().beginTransaction().hide(getFragmentManager().findFragmentById(R.id.details_frag)).commit();
             }
         });
 
@@ -70,16 +73,20 @@ public class DetailsFragment extends Fragment{
                         uneBorne.supprimerBorne(uneDb);
                     }
                 });
-                confirmation.setNegativeButton("Annuler",new CancelOnClickListener());
+                confirmation.setNegativeButton("Annuler", new CancelOnClickListener());
                 confirmation.create();
                 confirmation.show();
+                getFragmentManager().beginTransaction().hide(getFragmentManager().findFragmentById(R.id.details_frag)).commit();
             }
         });
 
         itin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr=" + uneMap.getMyLocation().getLatitude() + "," + uneMap.getMyLocation().getLongitude() + "&daddr=" + uneBorne.getLatitude() + "," + uneBorne.getLongitude()));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                getFragmentManager().beginTransaction().hide(getFragmentManager().findFragmentById(R.id.details_frag)).commit();
+                startActivity(intent);
             }
         });
 
@@ -87,13 +94,10 @@ public class DetailsFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Votre signalement a bien été pris en compte", Toast.LENGTH_SHORT).show();
+                getFragmentManager().beginTransaction().hide(getFragmentManager().findFragmentById(R.id.details_frag)).commit();
             }
         });
         return view;
-    }
-
-    public Borne getUneBorne() {
-        return uneBorne;
     }
 
     public void setUneBorne(Borne uneBorne) {
@@ -102,6 +106,10 @@ public class DetailsFragment extends Fragment{
 
     public void setUnDb(Database unDb) {
         this.uneDb = unDb;
+    }
+
+    public void setUneMap(GoogleMap uneMap) {
+        this.uneMap = uneMap;
     }
 
     private final class CancelOnClickListener implements DialogInterface.OnClickListener {
